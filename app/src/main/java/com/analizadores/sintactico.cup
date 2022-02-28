@@ -1,0 +1,223 @@
+//seccion codigo
+package sintactico;
+
+
+
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.objetos.*;
+
+
+parser code{:
+
+        private ArrayList<grafico> graficas=new ArrayList<>();
+	private grafico graficoN = new grafico();
+//	private boolean errorRepeticion;
+	private ArrayList<errorE> errorSin= new ArrayList<>();
+	//private ContGraficos contGraficos = new ContGraficos();
+	private ArrayList<countOperacion> operacionesList = new ArrayList<>();
+        private int contadorBarras=0;
+        private int contadorPie=0;
+
+        public void aumentarPie(){
+                contadorPie++;
+        }
+
+        public void aumentarBarras(){
+                contadorBarras++;
+        }
+
+        public int getCountBarras(){
+                return contadorBarras;
+        }
+
+        public int getcountPie(){
+                return contadorPie;
+        }
+
+        
+
+        public parser(AnalizadorLexico lex){
+        super(lex);
+        }
+
+ public void syntax_error(Symbol cur_token) {
+        System.out.println("El error es el simbolo: " + sym.terminalNames[cur_token.sym]);
+        System.out.println(String.format("En la posicion: %d, %d", cur_token.left, cur_token.right));
+        //Token token = (Token) tok.value;
+	List<Integer> listEscape=expected_token_ids();
+	String descripcion = "Se esperaba "+ sym.terminalNames[listEscape.get(0)];
+	//errors.add(new error(token.getLexeme(), token.getLine(), token.getColumn(), descripcion));
+        errorSin.add(new errorE(token.getLexeme(),token.getLine(),token.getColumn(),"Se esperaba"));
+    }
+
+    public void unrecovered_syntax_error(Symbol cur_token) {
+        if (cur_token.sym == sym.EOF) {
+            // System.out.println("El error es el simbolo: " + sym.terminalNames[cur_token.sym]);
+        //System.out.println(String.format("En la posicion: %d, %d", cur_token.left, cur_token.right));
+        }
+    }
+
+        //metodo para quitar las "
+        public String limpiarLexeme(String lexeme){
+		return lexeme = lexeme.replace("\"", "");
+	}
+
+
+
+       //Retorna list de operadores
+        public ArrayList getListOperaciones(){ 
+	        return operacionesList;
+	    }
+        //Retorna list de graficas
+        public ArrayList getListGraficas(){ 
+	        return graficas;
+	    }
+
+        //Retorna list de errores
+        public ArrayList getListErroresSin(){ 
+	        return errorSin;
+	    }
+
+
+
+      private String tokenEsperado(int token){
+                if(token==5)return "linea";
+                else if(token==16)return "*";
+                else if(token==17)return "/";
+                else if(token==14)return "+";
+                else if(token==4)return "curva";
+                else if(token==11)return "animar";
+                else if(token==3)return "color";
+                else if(token==7)return "cuadrado";
+                else if(token==12)return "objeto";
+                else if(token==10)return "graficar";
+                else if(token==20)return ",";
+                else if(token==9)return "poligono";
+                else if(token==6)return "circulo";
+                else if(token==2)return "entero";
+                else if(token==13)return "anterior";
+                else if(token==19)return ")";
+                else if(token==18)return "(";
+                else if(token==8)return "rectangulo";
+                else if(token==15)return "-";
+                else return " ";
+        }
+
+:};
+
+//seccion de terminales
+
+terminal Token ENTERO ,DECIMAL,MAS,MENOS,DIVISION,MULTIPLICACION,PARENTESISA,PARENTESISC,LLAVEA,LLAVEC,CORCHETEA,CORCHETEC,COMILLAS,COMA,DOSPUNTOS,PUNTOCOMA ;
+terminal Token DEF,BARRAS,PIE,TITULO,EJEX,EJEY,ETIQUETAS,VALORES,UNIR,TIPO,CANTIDAD,PORCENTAJE,TOTAL,EXTRA,EJECUTAR,ID ;
+
+
+//seccion no terminales
+non terminal INICIO,CIRCULAR,VERTICAL,TITULANDO,TIPANDO,ETIQUETANDO,TOTALIDAD,VALORANDO,UNIENDO,PLUS,HORIZONTAL,ORDENADAS,ITEM,TUPLAS,EJECUCION,EXPRESION,INTERBARRAS,INTERPIE;
+non terminal Integer o;
+
+//precedencia
+precedence left MENOS, MAS;
+precedence left MULTIPLICACION, DIVISION;
+
+
+//GRAMATICA
+start with INICIO;
+
+INICIO ::=DEF BARRAS LLAVEA INTERBARRAS LLAVEC EJECUCION {:System.out.println("def barras");:}
+        |DEF PIE LLAVEA INTERPIE LLAVEC EJECUCION  {:System.out.println("def pie");:}
+        |DEF BARRAS LLAVEA INTERBARRAS LLAVEC INICIO {:System.out.println("def barras recurcion");:}
+        |DEF PIE LLAVEA INTERPIE LLAVEC INICIO {:System.out.println("def pie recursion");:}
+        |error {:System.out.println("Error en la expresion general");:};
+
+
+
+INTERPIE ::= CIRCULAR {:graficas.add(new graficoPie(graficoN.getTitulo(),graficoN.getTipo(),graficoN.getEtiquetas(),graficoN.getValores(),graficoN.getTotal(),graficoN.getUnir(),graficoN.getExtra())); graficoN.clearGrafica(); aumentarPie();:};
+
+
+//Circular
+CIRCULAR ::= TITULANDO CIRCULAR {:System.out.println("titulo pie");:}
+            |TIPANDO CIRCULAR {:System.out.println("tipo pie");:}
+            |ETIQUETANDO CIRCULAR
+            |TOTALIDAD CIRCULAR
+            |VALORANDO CIRCULAR
+            |UNIENDO CIRCULAR
+            |PLUS CIRCULAR
+            |error CIRCULAR {:System.out.println("Error en la circular");:}
+            | 
+            ;
+
+
+INTERBARRAS ::= VERTICAL {: graficas.add(new graficoBarras(graficoN.getTitulo(),graficoN.getUnir(),graficoN.getEtiquetas(),graficoN.getValores())); graficoN.clearGrafica(); aumentarBarras();  :};
+
+//Vertical
+VERTICAL ::= TITULANDO VERTICAL {:System.out.println("titulo barras");:}
+            |HORIZONTAL VERTICAL {:System.out.println("ejex barras");:}
+            |ORDENADAS VERTICAL {:System.out.println("ejey barras");:}
+            |UNIENDO VERTICAL {:System.out.println("uniendo barras");:}
+            |error VERTICAL {:System.out.println("Error en vertical");:}
+            | ;
+
+//titulo
+TITULANDO ::= TITULO DOSPUNTOS  ID:title  PUNTOCOMA {:graficoN.setTitulo(limpiarLexeme(title.getLexeme()));:};
+
+//tipo
+TIPANDO ::= TIPO DOSPUNTOS PORCENTAJE PUNTOCOMA {:System.out.println("entro a tipo porcentaje"); graficoN.setTipo("Porcentaje");:}
+            | TIPO DOSPUNTOS CANTIDAD PUNTOCOMA {:System.out.println("entro a tipo cantidad");  graficoN.setTipo("Cantidad"); :}; 
+
+//etiquetas
+ETIQUETANDO ::= ETIQUETAS DOSPUNTOS CORCHETEA ITEM CORCHETEC PUNTOCOMA {:System.out.println("entro  a etiqueta");:};
+
+//total
+TOTALIDAD ::= TOTAL DOSPUNTOS o:total PUNTOCOMA {:System.out.println("entro  a total"); graficoN.setTotal(total.doubleValue()); :};
+
+//valor
+VALORANDO ::= VALORES DOSPUNTOS  CORCHETEA EXPRESION CORCHETEC PUNTOCOMA {:System.out.println("entro  a valor");:};
+
+//union
+UNIENDO ::= UNIR DOSPUNTOS CORCHETEA TUPLAS CORCHETEC PUNTOCOMA {:System.out.println("entro a unir");:};
+
+TUPLAS ::= LLAVEA o:numero1 COMA o:numero2 LLAVEC {:System.out.println("entro a tuplas"); graficoN.getUnir.add(new tupla(numero1,numero2)); :}
+            | LLAVEA o:numero1 COMA o:numero2 LLAVEC COMA TUPLAS {:System.out.println("entro a tuplas recursividad"); graficoN.getUnir.add(new tupla(numero1,numero2));:}
+            |error {:System.out.println("Error en tuplas");:};
+
+//extra
+PLUS  ::= EXTRA DOSPUNTOS ID:extra PUNTOCOMA {:System.out.println("entro  a extra"); graficoN.setExtra(limpiarLexeme(extra.getLexeme()));:}
+        | error EXTRA {:System.out.println("Error en extra");:};
+
+//EJEY
+ORDENADAS ::=  EJEY DOSPUNTOS CORCHETEA EXPRESION  CORCHETEC PUNTOCOMA {:System.out.println("entro a ejey");:};
+
+//Ejex
+HORIZONTAL ::= EJEX DOSPUNTOS CORCHETEA ITEM CORCHETEC PUNTOCOMA {:System.out.println("entro  a ejex");:};
+
+//ITEM
+ITEM ::= ID:item COMA ITEM {:System.out.println("entro a item recursivo"); graficoN.getEtiquetas.add(limpiarLexeme(item.getLexeme()));:}
+        | ID:item {:System.out.println("entro  a item"); graficoN.getEtiquetas.add(limpiarLexeme(item.getLexeme()));:}
+        |error {:System.out.println("Error en item");:};
+
+//expresion
+EXPRESION ::= o:numero COMA  EXPRESION {:System.out.println("entro a expresion recursiva"); graficoN.getValores().add(numero.doubleValue());:} 
+            | o:numero {:System.out.println("entro a expresion"); graficoN.getValores().add(numero.doubleValue());:};
+
+//operacion
+o ::=  o:numero1 MAS:signo o:numero2 {:RESULT = new Integer(numero1.intValue()+numero2.intValue());  countOperacion newOperation = new countOperacion("Suma",signo.getLine(),signo.getColumn(),String.valueOf(numero1+"+"+numero2));
+      operacionesList.add(newOperation); :}  
+   |  o:numero1 MENOS:signo o:numero2 {:RESULT = new Integer(numero1.intValue()-numero2.intValue());  countOperacion newOperation = new countOperacion("Resta",signo.getLine(),signo.getColumn(),String.valueOf(numero1+"-"+numero2));
+      operacionesList.add(newOperation); :}
+   |  o:numero1 DIVISION:signo o:numero2      {:RESULT = new Integer(numero1.intValue()/numero2.intValue());  countOperacion newOperation = new countOperacion("Division",signo.getLine(),signo.getColumn(),String.valueOf(numero1+"/"+numero2));
+      operacionesList.add(newOperation); :}
+   |  o:numero1 MULTIPLICACION:signo o:numero2 {:RESULT = new Integer(numero1.intValue()*numero2.intValue());  countOperacion newOperation = new countOperacion("Multiplicacion",signo.getLine(),signo.getColumn(),String.valueOf(numero1+"*"+numero2));
+      operacionesList.add(newOperation); :}
+   |  ENTERO:num {:System.out.println("encontro entero"); RESULT = Integer.valueOf(num.getLexeme());:}
+   |  DECIMAL
+   |  PARENTESISA o PARENTESISC
+   | error {:System.out.println("Error en operacion");:}
+   ;
+
+//EJECUTAR
+EJECUCION ::= EJECUTAR PARENTESISA ID PARENTESISC PUNTOCOMA EJECUCION {:System.out.println("entro a ejecutar");:}
+             |;
