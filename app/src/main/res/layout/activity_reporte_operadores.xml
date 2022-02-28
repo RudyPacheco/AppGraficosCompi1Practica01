@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".reporteOperadores"
+    android:orientation="vertical">
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <TableLayout
+                        android:id="@+id/tablaOperadores"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+
+                            <TextView
+                                android:id="@+id/textView4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columnaOperador"
+                                android:textStyle="bold"
+                                android:layout_margin="3dp"
+                                android:layout_column="0"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columnaLiena"
+                                android:textStyle="bold"
+                                android:layout_margin="3dp"
+                                android:layout_column="0"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columnaColumna"
+                                android:textStyle="bold"
+                                android:layout_margin="3dp"
+                                android:layout_column="0"
+
+                                />
+
+                            <TextView
+                                android:id="@+id/textView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columnaLexeman"
+                                android:textStyle="bold"
+                                android:layout_margin="3dp"
+                                android:layout_column="0"
+                                />
+
+                            <TextView
+                                android:id="@+id/textView5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columnaDescripcion" />
+
+                        </TableRow>
+
+                    </TableLayout>
+                </HorizontalScrollView>
+
+        </ScrollView>
+
+
+</LinearLayout>

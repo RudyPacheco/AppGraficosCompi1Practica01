@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Graficos</string>
+    <string name="descripcion">Ingrese las expresiones a graficar</string>
+    <string name="buttonEjecutar">Ejecutar</string>
+    <string name="buttonImportar">Importar</string>
+    <string name="buttonGraficos">Ver Graficos</string>
+    <string name="buttonReporteOperador">Reporte Operadores</string>
+    <string name="buttonReporteGraficos">Reporte Graficos</string>
+    <string name="buttonReporteErrores">Reporte Errores</string>
+    <string name="columnaOperador">Operador</string>
+    <string name="columnaLiena">Linea</string>
+    <string name="columnaColumna">Columna</string>
+    <string name="columnaLexeman">Lexema</string>
+    <string name="columnaDescripcion">Descripcion</string>
+    <string name="tituloReporteOp">Reporte Operadores</string>
+    <string name="columnaObjetos">Objetos</string>
+    <string name="columnaCantidad">Cantidad de Definiciones</string>
+    <string name="filaBarras">Barras</string>
+    <string name="filaPie">Pie</string>
+    <string name="columnaTipo">Tipo</string>
+
+</resources>
