@@ -1,6 +1,8 @@
 package com.objetos
 
-open class grafico{
+import java.io.Serializable
+
+open class grafico: Serializable{
     //definicion de variables
     var titulo:String? = null;
     var ejex:MutableList<String> = mutableListOf();

@@ -1,6 +1,8 @@
 package com.objetos
 
-class tupla {
+import java.io.Serializable
+
+class tupla: Serializable{
     var posy:Int=0;
     var posx:Int=0;
 

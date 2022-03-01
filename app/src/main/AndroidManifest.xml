@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppGraficosCompiPractica01">
         <activity
+            android:name=".generarGraficas"
+            android:exported="false" />
+        <activity
             android:name=".reporteGraficas"
             android:exported="false" />
         <activity
